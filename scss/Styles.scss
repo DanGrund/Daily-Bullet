@@ -1,4 +1,5 @@
 @import './Variables';
+@import './mobile';
 
 html {
   background-color: $journal-background-color;
@@ -43,7 +44,7 @@ h2 {
   margin-left: 10px
 }
 
-.cyclerButton {
+.cyclerButton, .completeButton {
   display: inline-block;
   background-color: $journal-background-color;
   border: none;
@@ -52,20 +53,21 @@ h2 {
   }
 }
 
-.taskItem {
-  display: block;
-  margin-left: 20px;
+li {
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  margin-left: 20vw;
+  font-family: $journal-entry-font;
 }
 
-.taskValue{
-  display: inline-block;
-  font-family: $journal-entry-font;
+.taskValue {
   font-size: 20px;
-
 }
 
 .completeButton {
-  display: inline-block;
-  background-color: $journal-background-color;
-  border: none;
+  border-radius: 15px;
+  margin-left: 10px;
+  border: 1px solid;
+  font-size: 10px;
 }
