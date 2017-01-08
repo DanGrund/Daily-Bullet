@@ -1,0 +1,74 @@
+@import './Variables';
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2){
+  h1 {
+    font-family: 'Averia Libre', sans-serif;
+    font-weight: 800;
+    font-size: 100px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  h2 {
+    font-family: $journal-entry-font;
+    font-size: 50px;
+    text-align: center;
+    margin: 30px 0 40px;
+  }
+
+  .journalInput {
+    background-color: $journal-background-color;
+    font-family: $journal-entry-font;
+    font-size: 40px;
+    height: 25px;
+    width: 60%;
+    padding-top: 10px;
+    margin-left: 19%;
+    margin-bottom: 30px;
+    border-style: none;
+    border-bottom: 1px solid black;
+    &:focus {
+      outline-style: none;
+    }
+  }
+
+  .saveButton {
+    background-color: $journal-background-color;
+    font-size: 40px;
+    border: 1px solid;
+    border-radius: 15px;
+    margin-left: 10px
+  }
+
+  .cyclerButton {
+    display: inline-block;
+    background-color: $journal-background-color;
+    border: none;
+    font-size: 50px;
+    &:focus {
+      outline-style:none;
+    }
+  }
+
+
+  li {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    margin-left: 20vw;
+    font-family: $journal-entry-font;
+  }
+
+  .completeButton {
+    border: none;
+    border-radius: 5px;
+    font-size: 25px;
+    margin: 10px;
+  }
+
+  // TODO: add in SearchBar css
+
+};
