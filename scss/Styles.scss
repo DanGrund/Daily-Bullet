@@ -1,0 +1,64 @@
+@import './Variables';
+
+html {
+  background-color: $journal-background-color;
+}
+
+h1 {
+  font-family: 'Averia Libre', sans-serif;
+  font-weight: 800;
+  font-size: 55px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.journalInput {
+  background-color: $journal-background-color;
+  font-family: $journal-entry-font;
+  font-size: 20px;
+  height: 25px;
+  width: 60%;
+  margin-left: 19%;
+  margin-bottom: 30px;
+  border-style: none;
+  border-bottom: 1px solid black;
+  &:focus {
+    outline-style: none;
+  }
+}
+
+.saveButton {
+  background-color: $journal-background-color;
+  font-size: 15px;
+  border: 1px solid;
+  border-radius: 15px;
+  margin-left: 10px
+}
+
+.cyclerButton {
+  display: inline-block;
+  background-color: $journal-background-color;
+  border: none;
+  &:focus {
+    outline-style:none;
+  }
+}
+
+.taskItem {
+  display: block;
+  margin-left: 20px;
+}
+
+.taskValue{
+  display: inline-block;
+  font-family: $journal-entry-font;
+  font-size: 20px;
+
+}
+
+.completeButton {
+  display: inline-block;
+  background-color: $journal-background-color;
+  border: none;
+}
