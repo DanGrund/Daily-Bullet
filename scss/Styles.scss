@@ -38,10 +38,26 @@ h2 {
 
 .saveButton {
   background-color: $journal-background-color;
-  font-size: 15px;
+  padding: 5px 15px;
+  font-family: $journal-entry-font;
+  font-size: 18px;
   border: 1px solid;
   border-radius: 15px;
-  margin-left: 10px
+  margin-left: 10px;
+  &:hover {
+    background-color: $journal-hover-color;
+  }
+}
+
+.searchInput {
+  background-color: $journal-background-color;
+  font-family: $journal-entry-font;
+  font-size: 20px;
+  height: 30px;
+  width: 60%;
+  margin-left: 19%;
+  margin-bottom: 20px;
+  border: 1px solid;
 }
 
 .cyclerButton, .completeButton {
@@ -66,8 +82,28 @@ li {
 }
 
 .completeButton {
-  border-radius: 15px;
   margin-left: 10px;
   border: 1px solid;
-  font-size: 10px;
+  height: 20px;
+  width: 20px;
+  background-color: $journal-background-color;
+}
+
+.login {
+  font-family: $header-font;
+  font-size: 50px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.loginButton {
+  font-family: $journal-entry-font;
+  font-size: 25px;
+  padding: 10px;
+  background-color: $journal-background-color;
+  border: 1px solid;
+  border-radius: 60px;
+  &:hover {
+    background-color: #ebe1a0;
+  }
 }
