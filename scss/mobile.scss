@@ -3,71 +3,101 @@
 and (min-device-width: 320px)
 and (max-device-width: 568px)
 and (-webkit-min-device-pixel-ratio: 2){
+
+
+
   h1 {
-    font-family: 'Averia Libre', sans-serif;
-    font-weight: 800;
-    font-size: 100px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 10px;
+    font-size: 120px;
   }
 
   h2 {
-    font-family: $journal-entry-font;
-    font-size: 50px;
-    text-align: center;
-    margin: 30px 0 40px;
+    font-size: 80px;
   }
 
   .journalInput {
     background-color: $journal-background-color;
     font-family: $journal-entry-font;
     font-size: 40px;
-    height: 25px;
-    width: 60%;
-    padding-top: 10px;
-    margin-left: 19%;
+    height: 50px;
+    width: 80%;
+    margin-left: 40px;
     margin-bottom: 30px;
-    border-style: none;
-    border-bottom: 1px solid black;
-    &:focus {
-      outline-style: none;
-    }
-  }
+}
 
-  .saveButton {
+  .saveButton, .btn-signout, .sub-list-submit-btn {
     background-color: $journal-background-color;
+    padding: 5px 15px;
+    font-family: $journal-entry-font;
     font-size: 40px;
     border: 1px solid;
     border-radius: 15px;
-    margin-left: 10px
-  }
-
-  .cyclerButton {
-    display: inline-block;
-    background-color: $journal-background-color;
-    border: none;
-    font-size: 50px;
-    &:focus {
-      outline-style:none;
+    margin-left: 10px;
+    &:hover {
+      background-color: $journal-hover-color;
     }
   }
 
-
-  li {
-    display: flex;
-    flex-direction: row;
-    text-align: left;
-    margin-left: 20vw;
+  .searchInput {
+    background-color: $journal-background-color;
     font-family: $journal-entry-font;
+    font-size: 40px;
+    height: 50px;
+    width: 80%;
+    margin-left: 40px;
+    margin-bottom: 20px;
+    border: 1px solid;
+  }
+
+  .sub-list-input {
+    font-family: $journal-entry-font;
+    font-size: 50px;
+    border: 1px solid;
+    width: 50%;
+  }
+
+  .cyclerButton {
+    font-size: 30px;
+  }
+
+  .taskItem {
+    width: 90%;
+    margin-left: 5vw;
+    margin-bottom: 50px;
+  }
+
+  #taskValue {
+    width: 70%;
+    font-size: 50px;
+    margin-top: 10px;
+    margin-left: 50px;
+  }
+
+  #sub-list {
+    margin-left: 10px;
+  }
+
+  #sub-list-li {
+    list-style: disc;
+    margin: 5px 0 20px;
+  }
+
+  .completed-text {
+    font-size: 50px;
+    right: 63px;
+    top: 63px;
   }
 
   .completeButton {
-    border: none;
-    border-radius: 5px;
-    font-size: 25px;
-    margin: 10px;
+    top: 60px;
+    height: 50px;
+    width: 50px;
   }
+
+  .deleteButton {
+    font-size: 50px;
+  }
+
+
 
   // TODO: add in SearchBar css
 
