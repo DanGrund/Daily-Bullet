@@ -42,23 +42,36 @@ h2 {
 
 .saveButton {
   background-color: $journal-background-color;
-  font-size: 15px;
+  padding: 5px 15px;
+  font-family: $journal-entry-font;
+  font-size: 18px;
   border: 1px solid;
   border-radius: 15px;
-  margin-left: 10px
-}
-
-.cyclerButton, .completeButton {
-  display: inline-block;
-  background-color: $journal-background-color;
-  border: none;
-  &:focus {
-    outline-style:none;
+  margin-left: 10px;
+  &:hover {
+    background-color: $journal-hover-color;
   }
 }
 
+.searchInput {
+  background-color: $journal-background-color;
+  font-family: $journal-entry-font;
+  font-size: 20px;
+  height: 30px;
+  width: 60%;
+  margin-left: 19%;
+  margin-bottom: 20px;
+  border: 1px solid;
+}
+
 .cyclerButton {
-  z-index: 5;
+  display: inline-block;
+  background-color: $journal-background-color;
+  border: none;
+  font-size: 15px;
+  &:focus {
+    outline-style:none;
+  }
 }
 
 li {
@@ -69,13 +82,48 @@ li {
   font-family: $journal-entry-font;
 }
 
-.taskValue {
+#taskValue {
   font-size: 20px;
+  margin-top: 10px;
 }
 
 .completeButton {
-  border-radius: 15px;
   margin-left: 10px;
+  margin-top: 10px;
   border: 1px solid;
-  font-size: 10px;
+  height: 20px;
+  width: 20px;
+  background-color: $journal-background-color;
+}
+
+.deleteButton {
+  margin: 4px;
+  border: 1px solid;
+  padding: 0 5px;
+  font-size: 15px;
+  font-family: $journal-entry-font;
+  background-color: $journal-background-color;
+  &:hover {
+    background-color: $journal-hover-color;
+  }
+
+}
+
+.login {
+  font-family: $header-font;
+  font-size: 50px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.loginButton {
+  font-family: $journal-entry-font;
+  font-size: 25px;
+  padding: 10px;
+  background-color: $journal-background-color;
+  border: 1px solid;
+  border-radius: 60px;
+  &:hover {
+    background-color: #ebe1a0;
+  }
 }
