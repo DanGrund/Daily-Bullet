@@ -40,7 +40,7 @@ h2 {
   }
 }
 
-.saveButton {
+.saveButton, .btn-signout, .sub-list-submit-btn {
   background-color: $journal-background-color;
   padding: 5px 15px;
   font-family: $journal-entry-font;
@@ -64,8 +64,17 @@ h2 {
   border: 1px solid;
 }
 
+.sub-list-input {
+  background-color: $journal-background-color;
+  font-family: $journal-entry-font;
+  font-size: 20px;
+  border: 1px solid;
+}
+
 .cyclerButton {
-  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
   background-color: $journal-background-color;
   border: none;
   font-size: 15px;
@@ -74,22 +83,38 @@ h2 {
   }
 }
 
-li {
+.taskItem {
+  border-bottom: 1px solid black;
+  width: 60%;
   display: flex;
   flex-direction: row;
-  text-align: left;
-  margin-left: 20vw;
+  position: relative;
+  margin-left: 19vw;
   font-family: $journal-entry-font;
+  margin-bottom: 10px;
 }
 
 #taskValue {
+  width: 70%;
   font-size: 20px;
   margin-top: 10px;
+  margin-left: 50px;
+}
+
+#sub-list {
+  margin-left: 10px;
+}
+
+.completed-text {
+  position: absolute;
+  right: 23px;
+  top: 23px;
 }
 
 .completeButton {
-  margin-left: 10px;
-  margin-top: 10px;
+  position: absolute;
+  right: 0;
+  top: 20px;
   border: 1px solid;
   height: 20px;
   width: 20px;
@@ -97,6 +122,9 @@ li {
 }
 
 .deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
   margin: 4px;
   border: 1px solid;
   padding: 0 5px;
