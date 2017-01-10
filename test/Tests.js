@@ -21,8 +21,8 @@ describe('<Main />', () => {
   it('should render one <IdeaInput /> component if a user is logged in', () => {
     const wrapper = shallow(<Main />)
     wrapper.setState({ user: {displayName: "Lauren Pesce"}})
-    expect(wrapper.find(IdeaInput)).to.have.length(1);
-  })
+
+
 
   it('should have a state of tasks that is an empty array', () => {
     const wrapper = shallow(<Main />)

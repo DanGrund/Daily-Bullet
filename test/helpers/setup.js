@@ -16,3 +16,4 @@ if (!global.window.localStorage) {
    setItem() {}
  }
 }
+
