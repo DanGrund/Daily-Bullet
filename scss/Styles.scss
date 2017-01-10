@@ -158,8 +158,19 @@ h2 {
   &:hover {
     background-color: $journal-hover-color;
   }
-
 }
+
+.sub-list-delete-btn {
+  border: 1px solid;
+  padding: 2px 5px;
+  font-size: 15px;
+  font-family: $journal-entry-font;
+  background-color: $journal-background-color;
+  &:hover {
+    background-color: $journal-hover-color;
+  }
+}
+
 
 .login {
   font-family: $header-font;
