@@ -2,7 +2,7 @@ const path = require('path');
 module.exports = {
   entry: {
     main: ['babel-polyfill', './lib/index.js'],
-    test: ['babel-polyfill', 'mocha!./test/index.js'],
+    test: ['babel-polyfill', 'mocha!./test/Tests.js'],
   },
   output: {
       path: path.join(__dirname, 'public'),
