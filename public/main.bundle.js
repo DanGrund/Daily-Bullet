@@ -9061,9 +9061,9 @@
 	      var newArr = this.state.tasks;
 	      switch (type) {
 	        case '🔧':
-	          _firebase2.default.database().ref(user).child(newArr[index].firebaseId).update({ type: '🕗' });
+	          _firebase2.default.database().ref(user).child(newArr[index].firebaseId).update({ type: '📅' });
 	          break;
-	        case '🕗':
+	        case '📅':
 	          _firebase2.default.database().ref(user).child(newArr[index].firebaseId).update({ type: '📓' });
 	          break;
 	        case '📓':
