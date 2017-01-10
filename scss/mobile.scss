@@ -1,17 +1,56 @@
 @import './Variables';
+
+@media screen and (max-width: 860px) {
+  .sub-list-submit-btn, .deleteButton {
+    background-color: $journal-background-color;
+    position: inherit;
+    padding: 5px 15px;
+    font-family: $journal-entry-font;
+    font-size: 20px;
+    border: 1px solid;
+    border-radius: 15px;
+    &:hover {
+      background-color: $journal-hover-color;
+    }
+  }
+
+  .sub-list-buttons {
+    width: 50%;
+    margin-left: 42px;
+    margin-top: 58px;
+  }
+
+  .completed-text {
+    font-size: 20px;
+    position: absolute;
+    top: 34px;
+    right: 49px;
+
+  }
+
+  .completeButton {
+    position: absolute;
+    top: 32px;
+    right: 13px;
+  }
+
+
+}
+
+
 @media only screen
 and (min-device-width: 320px)
-and (max-device-width: 568px)
+and (max-device-width: 860px)
 and (-webkit-min-device-pixel-ratio: 2){
-
-
 
   h1 {
     font-size: 120px;
+    margin: 20px;
   }
 
   h2 {
     font-size: 80px;
+    margin: 20px;
   }
 
   .journalInput {
@@ -21,10 +60,10 @@ and (-webkit-min-device-pixel-ratio: 2){
     height: 50px;
     width: 80%;
     margin-left: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
-  .saveButton, .btn-signout, .sub-list-submit-btn {
+  .saveButton, .btn-signout {
     background-color: $journal-background-color;
     padding: 5px 15px;
     font-family: $journal-entry-font;
@@ -32,6 +71,22 @@ and (-webkit-min-device-pixel-ratio: 2){
     border: 1px solid;
     border-radius: 15px;
     margin-left: 10px;
+    margin-bottom: 10px;
+    &:hover {
+      background-color: $journal-hover-color;
+    }
+  }
+
+  .sub-list-submit-btn, .deleteButton {
+    background-color: $journal-background-color;
+    position: inherit;
+    padding: 5px 15px;
+    font-family: $journal-entry-font;
+    font-size: 50px;
+    border: 1px solid;
+    border-radius: 15px;
+    margin-left: 16px;
+    margin-bottom: 10px;
     &:hover {
       background-color: $journal-hover-color;
     }
@@ -44,7 +99,7 @@ and (-webkit-min-device-pixel-ratio: 2){
     height: 50px;
     width: 80%;
     margin-left: 40px;
-    margin-bottom: 20px;
+    margin-bottom: 75px;
     border: 1px solid;
   }
 
@@ -52,7 +107,8 @@ and (-webkit-min-device-pixel-ratio: 2){
     font-family: $journal-entry-font;
     font-size: 50px;
     border: 1px solid;
-    width: 50%;
+    width: 70%;
+    margin-bottom: 16px;
   }
 
   .cyclerButton {
@@ -62,14 +118,19 @@ and (-webkit-min-device-pixel-ratio: 2){
   .taskItem {
     width: 90%;
     margin-left: 5vw;
-    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-bottom: 42px;
   }
 
   #taskValue {
-    width: 70%;
+    width: 50%;
     font-size: 50px;
     margin-top: 10px;
     margin-left: 50px;
+  }
+
+  .sub-list-buttons {
+    width: 50%;
   }
 
   #sub-list {
@@ -83,22 +144,18 @@ and (-webkit-min-device-pixel-ratio: 2){
 
   .completed-text {
     font-size: 50px;
-    right: 63px;
-    top: 63px;
+    position: absolute;
+    top: 178px;
+    right: 195px;
   }
 
   .completeButton {
-    top: 60px;
+    position: absolute;
+    top: 168px;
+    right: 120px;
     height: 50px;
     width: 50px;
   }
 
-  .deleteButton {
-    font-size: 50px;
-  }
-
-
-
-  // TODO: add in SearchBar css
 
 };
