@@ -53,8 +53,13 @@
   },
   "dependencies": {
     "babel": "^6.5.2",
+    "chai": "^3.5.0",
     "enzyme": "^2.7.0",
     "firebase": "^3.6.4",
-    "mocha": "^2.5.3"
+    "jsdom": "^9.9.1",
+    "jsdom-global": "^2.1.1",
+    "mocha": "^2.5.3",
+    "react-addons-test-utils": "^15.4.2",
+    "sinon": "^1.17.7"
   }
 }
