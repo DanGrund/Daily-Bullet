@@ -56,19 +56,19 @@ describe('<Main />', () => {
     expect(Main.prototype.handleSearch.called).to.equal(true);
   });
 
-  //     it('should have multiple components',() =>{
-  //     const user = {email:"28l.pesce@gmail.com"}
-  //     const tasks = [{firebaseId:'-Ka4DLhUcPqjsEUr3923', id: 1483998849935, title: "sdfsdfsdf"}]
-  //
-  //     const wrapper = mount(<Main />)
-  //
-  //     wrapper.state().user = user
-  //     wrapper.state().tasks = tasks
-  //     wrapper.update();
-  //     expect(wrapper.find('DailyList').length).to.equal(1);
-  //     expect(wrapper.find('IdeaInput').length).to.equal(1);
-  //     expect(wrapper.find('SearchBar').length).to.equal(1);
-  // });
+      it.skip('should have multiple components',() =>{
+      const user = {email:"28l.pesce@gmail.com"}
+      const tasks = [{firebaseId:'-Ka4DLhUcPqjsEUr3923', id: 1483998849935, title: "sdfsdfsdf"}]
+
+      const wrapper = mount(<Main />)
+
+      wrapper.state().user = user
+      wrapper.state().tasks = tasks
+      wrapper.update();
+      expect(wrapper.find('DailyList').length).to.equal(1);
+      expect(wrapper.find('IdeaInput').length).to.equal(1);
+      expect(wrapper.find('SearchBar').length).to.equal(1);
+  });
 });
 
 describe('<IdeaInput />', () => {
