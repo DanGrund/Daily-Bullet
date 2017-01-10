@@ -4,6 +4,7 @@ import { shallow, mount, render } from 'enzyme';
 import sinon from 'sinon';
 import jsdom from 'jsdom-global/register';
 import Main from '../lib/Components/Main';
+import TaskItem from '../lib/Components/TaskItem';
 
 import DailyList from '../lib/Components/DailyList';
 import IdeaInput from '../lib/Components/IdeaInput';
@@ -21,8 +22,6 @@ describe('<Main />', () => {
   it('should render one <IdeaInput /> component if a user is logged in', () => {
     const wrapper = shallow(<Main />)
     wrapper.setState({ user: {displayName: "Lauren Pesce"}})
-
-
 
   it('should have a state of tasks that is an empty array', () => {
     const wrapper = shallow(<Main />)
@@ -111,4 +110,13 @@ describe('<SearchBar />', () => {
     const wrapper = shallow(<SearchBar />)
     assert.equal(wrapper.type(), 'input');
   });
+});
+describe('<TaskItem />', () => {
+  it('renders a div elements', () => {
+    const wrapper = shallow(<TaskItem />)
+    assert.equal(wrapper.type(), 'div');
+  });
+});
+
+
 });
