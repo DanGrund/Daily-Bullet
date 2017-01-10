@@ -14,5 +14,5 @@ require('babel-polyfill')
 //  localStorage = {
 //    getItem() { return '[]'; },
 //    setItem() {}
-//  }
+ // }
 // }

@@ -8,10 +8,12 @@ and (-webkit-min-device-pixel-ratio: 2){
 
   h1 {
     font-size: 120px;
+    margin: 20px;
   }
 
   h2 {
     font-size: 80px;
+    margin: 20px;
   }
 
   .journalInput {
@@ -21,7 +23,7 @@ and (-webkit-min-device-pixel-ratio: 2){
     height: 50px;
     width: 80%;
     margin-left: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
   .saveButton, .btn-signout, .sub-list-submit-btn {
@@ -32,6 +34,7 @@ and (-webkit-min-device-pixel-ratio: 2){
     border: 1px solid;
     border-radius: 15px;
     margin-left: 10px;
+    margin-top: 10px;
     &:hover {
       background-color: $journal-hover-color;
     }
@@ -44,7 +47,7 @@ and (-webkit-min-device-pixel-ratio: 2){
     height: 50px;
     width: 80%;
     margin-left: 40px;
-    margin-bottom: 20px;
+    margin-bottom: 75px;
     border: 1px solid;
   }
 
