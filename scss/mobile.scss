@@ -85,11 +85,15 @@ and (-webkit-min-device-pixel-ratio: 2){
     font-size: 50px;
     border: 1px solid;
     border-radius: 15px;
-    margin-left: 16px;
+    margin-left: 70px;
     margin-bottom: 10px;
     &:hover {
       background-color: $journal-hover-color;
     }
+  }
+
+  .sub-list-delete-btn {
+    font-size: 30px;
   }
 
   .searchInput {
