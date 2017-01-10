@@ -9037,7 +9037,7 @@
 	      task['key'] = Date.now();
 	      task['type'] = '⚫️';
 	      task['completed'] = false;
-	      task['sublist'] = [{ value: '', key: 'placeholder' }];
+	      task['sublist'] = [];
 	      this.state.tasks.push(task);
 	      this.setState({ tasks: this.state.tasks });
 	      _firebase2.default.database().ref(user).push(Object.assign(task, { id: Date.now(),
@@ -9091,16 +9091,15 @@
 	    }
 	  }, {
 	    key: 'addSubList',
-	    value: function addSubList(key, array) {
+	    value: function addSubList(listKey, subTask) {
 	      var user = this.state.user.uid;
-	      _firebase2.default.database().ref(user).child(key).update({ sublist: array });
+	      _firebase2.default.database().ref(user + '/' + listKey + '/sublist/').push(subTask);
 	    }
 	  }, {
 	    key: 'deleteSubTask',
-	    value: function deleteSubTask(listKey, index) {
+	    value: function deleteSubTask(listKey, id) {
 	      var user = this.state.user.uid;
-	      console.log(listKey + '/' + index);
-	      _firebase2.default.database().ref(user + '/' + listKey + '/sublist/').child(index).remove();
+	      _firebase2.default.database().ref(user + '/' + listKey + '/sublist/').child(id).remove();
 	    }
 	  }, {
 	    key: 'render',
@@ -9128,7 +9127,7 @@
 	          'h2',
 	          null,
 	          ' Welcome ',
-	          this.state.user.email,
+	          this.state.user.displayName,
 	          '   ',
 	          _react2.default.createElement(
 	            'button',
@@ -9151,7 +9150,8 @@
 	          toggleComplete: this.toggleComplete.bind(this),
 	          deleteTask: this.deleteTask.bind(this),
 	          addSubList: this.addSubList.bind(this),
-	          deleteSubTask: this.deleteSubTask.bind(this)
+	          deleteSubTask: this.deleteSubTask.bind(this),
+	          user: this.state.user
 	        })
 	      );
 	    }
@@ -13068,7 +13068,8 @@
 	      toggleComplete = _ref.toggleComplete,
 	      deleteTask = _ref.deleteTask,
 	      addSubList = _ref.addSubList,
-	      deleteSubTask = _ref.deleteSubTask;
+	      deleteSubTask = _ref.deleteSubTask,
+	      user = _ref.user;
 
 	  return _react2.default.createElement(
 	    'div',
@@ -13077,7 +13078,7 @@
 	      'ul',
 	      null,
 	      tasks.map(function (task, index) {
-	        return _react2.default.createElement(_TaskItem2.default, _extends({ key: task.key }, task, { index: index, typeCycler: typeCycler, toggleComplete: toggleComplete, deleteTask: deleteTask, addSubList: addSubList, deleteSubTask: deleteSubTask }));
+	        return _react2.default.createElement(_TaskItem2.default, _extends({ key: task.key }, task, { index: index, typeCycler: typeCycler, toggleComplete: toggleComplete, deleteTask: deleteTask, addSubList: addSubList, deleteSubTask: deleteSubTask, user: user }));
 	      })
 	    )
 	  );
@@ -13129,6 +13130,32 @@
 	  }
 
 	  _createClass(TaskItem, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      var user = this.props.user.uid;
+	      var listKey = this.props.firebaseId;
+	      _firebase2.default.database().ref(user + '/' + listKey + '/sublist/').on('value', function (snapshot) {
+	        var tasksFromFirebase = _this2.createTaskArray(snapshot.val());
+	        _this2.setState({ sublist: tasksFromFirebase || [] });
+	      });
+	    }
+	  }, {
+	    key: 'createTaskArray',
+	    value: function createTaskArray(object) {
+	      if (!object) {
+	        return [];
+	      }
+	      var fireBaseKeys = Object.keys(object);
+	      var allFromFireBase = fireBaseKeys.map(function (singleKey) {
+	        var singleItem = object[singleKey];
+	        singleItem['firebaseId'] = singleKey;
+	        return singleItem;
+	      });
+	      return allFromFireBase;
+	    }
+	  }, {
 	    key: 'handleChange',
 	    value: function handleChange(e) {
 	      var subTask = this.state.newSubTask;
@@ -13138,15 +13165,18 @@
 	  }, {
 	    key: 'handleSave',
 	    value: function handleSave() {
-	      var taskArray = this.state.sublist;
-	      taskArray.push(this.state.newSubTask);
-	      this.setState({ sublist: taskArray, newSubTask: { value: '', key: Date.now() } });
-	      this.props.addSubList(this.props.firebaseId, this.state.sublist);
+	      this.setState({ newSubTask: { value: '', key: Date.now() } });
+	      this.props.addSubList(this.props.firebaseId, this.state.newSubTask);
+	    }
+	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(subtaskId) {
+	      this.props.deleteSubTask(this.props.firebaseId, subtaskId);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -13159,7 +13189,7 @@
 	            {
 	              className: 'cyclerButton',
 	              onClick: function onClick() {
-	                return _this2.props.typeCycler(_this2.props.type, _this2.props.index);
+	                return _this3.props.typeCycler(_this3.props.type, _this3.props.index);
 	              }
 	            },
 	            this.props.type
@@ -13168,40 +13198,44 @@
 	            'div',
 	            { id: 'taskValue', className: this.props.completed ? 'completed' : '' },
 	            this.props.value,
-	            _react2.default.createElement('input', {
-	              className: 'sub-list-input',
-	              value: this.state.newSubTask.value,
-	              onChange: function onChange(e) {
-	                return _this2.handleChange(e);
-	              }
-	            }),
 	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'sub-list-submit-btn',
-	                onClick: function onClick() {
-	                  return _this2.handleSave();
+	              'div',
+	              { className: 'sub-list-container' },
+	              _react2.default.createElement('input', {
+	                className: 'sub-list-input',
+	                value: this.state.newSubTask.value,
+	                onChange: function onChange(e) {
+	                  return _this3.handleChange(e);
 	                }
-	              },
-	              'submit'
-	            ),
-	            _react2.default.createElement(
-	              'ul',
-	              { id: 'sub-list' },
-	              this.props.sublist.map(function (task, index) {
-	                return _react2.default.createElement(
-	                  'li',
-	                  { id: 'sub-list-li', key: task.key },
-	                  task.value,
-	                  _react2.default.createElement(
-	                    'button',
-	                    { onClick: function onClick() {
-	                        return _this2.props.deleteSubTask(_this2.props.firebaseId, index);
-	                      } },
-	                    'delete'
-	                  )
-	                );
-	              })
+	              }),
+	              _react2.default.createElement(
+	                'button',
+	                {
+	                  className: 'sub-list-submit-btn',
+	                  onClick: function onClick() {
+	                    return _this3.handleSave();
+	                  }
+	                },
+	                'submit'
+	              ),
+	              _react2.default.createElement(
+	                'ul',
+	                { id: 'sub-list' },
+	                this.state.sublist.map(function (task) {
+	                  return _react2.default.createElement(
+	                    'li',
+	                    { id: 'sub-list-li', key: task.key },
+	                    task.value,
+	                    _react2.default.createElement(
+	                      'button',
+	                      { onClick: function onClick() {
+	                          return _this3.handleDelete(task.firebaseId);
+	                        } },
+	                      'delete'
+	                    )
+	                  );
+	                })
+	              )
 	            )
 	          ),
 	          _react2.default.createElement('input', {
@@ -13209,7 +13243,7 @@
 	            checked: this.props.completed,
 	            className: 'completeButton',
 	            onClick: function onClick() {
-	              return _this2.props.toggleComplete(_this2.props.completed, _this2.props.index);
+	              return _this3.props.toggleComplete(_this3.props.completed, _this3.props.index);
 	            }
 	          }),
 	          _react2.default.createElement(
@@ -13221,7 +13255,7 @@
 	            'button',
 	            { className: 'deleteButton',
 	              onClick: function onClick() {
-	                return _this2.props.deleteTask(_this2.props.firebaseId);
+	                return _this3.props.deleteTask(_this3.props.firebaseId);
 	              }
 	            },
 	            'delete'
@@ -30801,7 +30835,7 @@
 
 
 	// module
-	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {\n  h1 {\n    font-family: 'Averia Libre', sans-serif;\n    font-weight: 800;\n    font-size: 100px;\n    padding: 20px;\n    text-align: center;\n    margin-top: 10px; }\n  h2 {\n    font-family: \"Special Elite\", serif;\n    font-size: 50px;\n    text-align: center;\n    margin: 30px 0 40px; }\n  .journalInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 25px;\n    width: 60%;\n    padding-top: 10px;\n    margin-left: 19%;\n    margin-bottom: 30px;\n    border-style: none;\n    border-bottom: 1px solid black; }\n    .journalInput:focus {\n      outline-style: none; }\n  .saveButton {\n    background-color: #FBFAEC;\n    font-size: 40px;\n    border: 1px solid;\n    border-radius: 15px;\n    margin-left: 10px; }\n  .cyclerButton {\n    display: inline-block;\n    background-color: #FBFAEC;\n    border: none;\n    font-size: 50px; }\n    .cyclerButton:focus {\n      outline-style: none; }\n  li {\n    display: flex;\n    flex-direction: row;\n    text-align: left;\n    margin-left: 20vw;\n    font-family: \"Special Elite\", serif; }\n  .completeButton {\n    border: none;\n    border-radius: 5px;\n    font-size: 25px;\n    margin: 10px; } }\n\nhtml {\n  background-color: #FBFAEC; }\n\nh1 {\n  font-family: 'Averia Libre', sans-serif;\n  font-weight: 800;\n  font-size: 55px;\n  padding: 20px;\n  text-align: center;\n  margin-top: 10px; }\n\n.completed {\n  text-decoration: line-through; }\n\nh2 {\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  text-align: center;\n  margin-bottom: 20px; }\n\n.journalInput {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  height: 25px;\n  width: 60%;\n  margin-left: 19%;\n  margin-bottom: 30px;\n  border-style: none;\n  border-bottom: 1px solid black; }\n  .journalInput:focus {\n    outline-style: none; }\n\n.saveButton, .btn-signout, .sub-list-submit-btn {\n  background-color: #FBFAEC;\n  padding: 5px 15px;\n  font-family: \"Special Elite\", serif;\n  font-size: 18px;\n  border: 1px solid;\n  border-radius: 15px;\n  margin-left: 10px; }\n  .saveButton:hover, .btn-signout:hover, .sub-list-submit-btn:hover {\n    background-color: #ebe1a0; }\n\n.searchInput {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  height: 30px;\n  width: 60%;\n  margin-left: 19%;\n  margin-bottom: 20px;\n  border: 1px solid; }\n\n.sub-list-input {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  border: 1px solid; }\n\n.cyclerButton {\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #FBFAEC;\n  border: none;\n  font-size: 15px; }\n  .cyclerButton:focus {\n    outline-style: none; }\n\n.taskItem {\n  border-bottom: 1px solid black;\n  width: 60%;\n  display: flex;\n  flex-direction: row;\n  position: relative;\n  margin-left: 19vw;\n  font-family: \"Special Elite\", serif;\n  margin-bottom: 10px; }\n\n#taskValue {\n  width: 70%;\n  font-size: 20px;\n  margin-top: 10px;\n  margin-left: 50px; }\n\n#sub-list {\n  margin-left: 10px; }\n\n.completed-text {\n  position: absolute;\n  right: 23px;\n  top: 23px; }\n\n.completeButton {\n  position: absolute;\n  right: 0;\n  top: 20px;\n  border: 1px solid;\n  height: 20px;\n  width: 20px;\n  background-color: #FBFAEC; }\n\n.deleteButton {\n  position: absolute;\n  top: 0;\n  right: 0;\n  margin: 4px;\n  border: 1px solid;\n  padding: 0 5px;\n  font-size: 15px;\n  font-family: \"Special Elite\", serif;\n  background-color: #FBFAEC; }\n  .deleteButton:hover {\n    background-color: #ebe1a0; }\n\n.login {\n  font-family: \"Averia Libre\", sans-serif;\n  font-size: 50px;\n  text-align: center;\n  margin-top: 10px; }\n\n.loginButton {\n  font-family: \"Special Elite\", serif;\n  font-size: 25px;\n  padding: 10px;\n  background-color: #FBFAEC;\n  border: 1px solid;\n  border-radius: 60px; }\n  .loginButton:hover {\n    background-color: #ebe1a0; }\n\n@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {\n  h1 {\n    font-family: 'Averia Libre', sans-serif;\n    font-weight: 800;\n    font-size: 100px;\n    padding: 20px;\n    text-align: center;\n    margin-top: 10px; }\n  h2 {\n    font-family: \"Special Elite\", serif;\n    font-size: 50px;\n    text-align: center;\n    margin: 30px 0 40px; }\n  .journalInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 25px;\n    width: 60%;\n    padding-top: 10px;\n    margin-left: 19%;\n    margin-bottom: 30px;\n    border-style: none;\n    border-bottom: 1px solid black; }\n    .journalInput:focus {\n      outline-style: none; }\n  .saveButton {\n    background-color: #FBFAEC;\n    font-size: 40px;\n    border: 1px solid;\n    border-radius: 15px;\n    margin-left: 10px; }\n  .cyclerButton {\n    display: inline-block;\n    background-color: #FBFAEC;\n    border: none;\n    font-size: 50px; }\n    .cyclerButton:focus {\n      outline-style: none; }\n  li {\n    display: flex;\n    flex-direction: row;\n    text-align: left;\n    margin-left: 20vw;\n    font-family: \"Special Elite\", serif; }\n  .completeButton {\n    border: none;\n    border-radius: 5px;\n    font-size: 25px;\n    margin: 10px; } }\n", ""]);
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {\n  h1 {\n    font-size: 120px; }\n  h2 {\n    font-size: 80px; }\n  .journalInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 50px;\n    width: 80%;\n    margin-left: 40px;\n    margin-bottom: 30px; }\n  .saveButton, .btn-signout, .sub-list-submit-btn {\n    background-color: #FBFAEC;\n    padding: 5px 15px;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    border: 1px solid;\n    border-radius: 15px;\n    margin-left: 10px; }\n    .saveButton:hover, .btn-signout:hover, .sub-list-submit-btn:hover {\n      background-color: #ebe1a0; }\n  .searchInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 50px;\n    width: 80%;\n    margin-left: 40px;\n    margin-bottom: 20px;\n    border: 1px solid; }\n  .sub-list-input {\n    font-family: \"Special Elite\", serif;\n    font-size: 50px;\n    border: 1px solid;\n    width: 50%; }\n  .cyclerButton {\n    font-size: 30px; }\n  .taskItem {\n    width: 90%;\n    margin-left: 5vw;\n    margin-bottom: 50px; }\n  #taskValue {\n    width: 70%;\n    font-size: 50px;\n    margin-top: 10px;\n    margin-left: 50px; }\n  #sub-list {\n    margin-left: 10px; }\n  #sub-list-li {\n    list-style: disc;\n    margin: 5px 0 20px; }\n  .completed-text {\n    font-size: 50px;\n    right: 63px;\n    top: 63px; }\n  .completeButton {\n    top: 60px;\n    height: 50px;\n    width: 50px; }\n  .deleteButton {\n    font-size: 50px; } }\n\nhtml {\n  background-color: #FBFAEC; }\n\nh1 {\n  font-family: 'Averia Libre', sans-serif;\n  font-weight: 800;\n  font-size: 55px;\n  padding: 20px;\n  text-align: center;\n  margin-top: 10px; }\n\n.completed {\n  text-decoration: line-through; }\n\nh2 {\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  text-align: center;\n  margin-bottom: 20px; }\n\n.journalInput {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  height: 25px;\n  width: 60%;\n  margin-left: 19%;\n  margin-bottom: 30px;\n  border-style: none;\n  border-bottom: 1px solid black; }\n  .journalInput:focus {\n    outline-style: none; }\n\n.saveButton, .btn-signout, .sub-list-submit-btn {\n  background-color: #FBFAEC;\n  padding: 5px 15px;\n  font-family: \"Special Elite\", serif;\n  font-size: 18px;\n  border: 1px solid;\n  border-radius: 15px;\n  margin-left: 10px; }\n  .saveButton:hover, .btn-signout:hover, .sub-list-submit-btn:hover {\n    background-color: #ebe1a0; }\n\n.searchInput {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  height: 30px;\n  width: 60%;\n  margin-left: 19%;\n  margin-bottom: 20px;\n  border: 1px solid; }\n\n.sub-list-input {\n  background-color: #FBFAEC;\n  font-family: \"Special Elite\", serif;\n  font-size: 20px;\n  border: 1px solid; }\n\n.cyclerButton {\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #FBFAEC;\n  border: none;\n  font-size: 15px; }\n  .cyclerButton:focus {\n    outline-style: none; }\n\n.taskItem {\n  border-bottom: 1px solid black;\n  width: 60%;\n  display: flex;\n  flex-direction: row;\n  position: relative;\n  margin-left: 19vw;\n  font-family: \"Special Elite\", serif;\n  margin-bottom: 10px; }\n\n#taskValue {\n  width: 70%;\n  font-size: 20px;\n  margin-top: 10px;\n  margin-left: 50px; }\n\n#sub-list {\n  margin-left: 10px; }\n\n#sub-list-li {\n  list-style: disc;\n  margin: 5px 0 5px; }\n\n.completed-text {\n  position: absolute;\n  right: 23px;\n  top: 23px; }\n\n.completeButton {\n  position: absolute;\n  right: 0;\n  top: 20px;\n  border: 1px solid;\n  height: 20px;\n  width: 20px;\n  background-color: #FBFAEC; }\n\n.deleteButton {\n  position: absolute;\n  top: 0;\n  right: 0;\n  margin: 4px;\n  border: 1px solid;\n  padding: 0 5px;\n  font-size: 15px;\n  font-family: \"Special Elite\", serif;\n  background-color: #FBFAEC; }\n  .deleteButton:hover {\n    background-color: #ebe1a0; }\n\n.login {\n  font-family: \"Averia Libre\", sans-serif;\n  font-size: 50px;\n  text-align: center;\n  margin-top: 10px; }\n\n.loginButton {\n  font-family: \"Special Elite\", serif;\n  font-size: 25px;\n  padding: 10px;\n  background-color: #FBFAEC;\n  border: 1px solid;\n  border-radius: 60px; }\n  .loginButton:hover {\n    background-color: #ebe1a0; }\n\n@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {\n  h1 {\n    font-size: 120px; }\n  h2 {\n    font-size: 80px; }\n  .journalInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 50px;\n    width: 80%;\n    margin-left: 40px;\n    margin-bottom: 30px; }\n  .saveButton, .btn-signout, .sub-list-submit-btn {\n    background-color: #FBFAEC;\n    padding: 5px 15px;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    border: 1px solid;\n    border-radius: 15px;\n    margin-left: 10px; }\n    .saveButton:hover, .btn-signout:hover, .sub-list-submit-btn:hover {\n      background-color: #ebe1a0; }\n  .searchInput {\n    background-color: #FBFAEC;\n    font-family: \"Special Elite\", serif;\n    font-size: 40px;\n    height: 50px;\n    width: 80%;\n    margin-left: 40px;\n    margin-bottom: 20px;\n    border: 1px solid; }\n  .sub-list-input {\n    font-family: \"Special Elite\", serif;\n    font-size: 50px;\n    border: 1px solid;\n    width: 50%; }\n  .cyclerButton {\n    font-size: 30px; }\n  .taskItem {\n    width: 90%;\n    margin-left: 5vw;\n    margin-bottom: 50px; }\n  #taskValue {\n    width: 70%;\n    font-size: 50px;\n    margin-top: 10px;\n    margin-left: 50px; }\n  #sub-list {\n    margin-left: 10px; }\n  #sub-list-li {\n    list-style: disc;\n    margin: 5px 0 20px; }\n  .completed-text {\n    font-size: 50px;\n    right: 63px;\n    top: 63px; }\n  .completeButton {\n    top: 60px;\n    height: 50px;\n    width: 50px; }\n  .deleteButton {\n    font-size: 50px; } }\n", ""]);
 
 	// exports
 
